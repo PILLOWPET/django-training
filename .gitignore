@@ -1,3 +1,4 @@
-Pipile.lock
+Pipfile.lock
 .flake8
 *.sqlite3
+settings.json
