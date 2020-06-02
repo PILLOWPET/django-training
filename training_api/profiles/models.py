@@ -8,7 +8,7 @@ from django.db.models.signals import post_save
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    email = models.CharField(max_length=40)
+    description = models.CharField(max_length=512)
 
 
 @receiver(post_save, sender=User)
