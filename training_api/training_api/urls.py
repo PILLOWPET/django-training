@@ -23,5 +23,5 @@ urlpatterns = [
     path("posts/", include("posts.urls")),
     path("token/", obtain_jwt_token),
     path("profiles/", include("profiles.urls")),
-    path("users", include("users.urls")),
+    path("users/", include("users.urls")),
 ]
