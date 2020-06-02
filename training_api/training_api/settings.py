@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "profiles.apps.ProfilesConfig",
     "users.apps.UsersConfig",
+    "restfw_composed_permissions",
 ]
 
 MIDDLEWARE = [
