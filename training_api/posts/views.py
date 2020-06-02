@@ -16,5 +16,4 @@ class PostAPIView(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [AllowAny]
-        print(permission_classes)
         return [permission() for permission in permission_classes]
