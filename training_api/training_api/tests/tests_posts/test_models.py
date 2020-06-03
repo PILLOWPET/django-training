@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from posts.models import Post
 
 
-class UserModelTest(TestCase):
+class PostModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         user = User.objects.create_user(username="test_user", password="test_password")
