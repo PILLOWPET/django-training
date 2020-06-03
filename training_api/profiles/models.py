@@ -9,6 +9,7 @@ from django.db.models.signals import post_save
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=512)
+    following_profiles = models.ManyToManyField("self", blank=True)
 
 
 @receiver(post_save, sender=User)
