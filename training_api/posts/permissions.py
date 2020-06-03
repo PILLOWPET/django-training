@@ -5,7 +5,6 @@ from restfw_composed_permissions.base import (
     And,
 )
 from restfw_composed_permissions.generic.components import (
-    AllowOnlySafeHttpMethod,
     AllowOnlyAuthenticated,
     ObjectAttrEqualToObjectAttr,
 )
@@ -13,9 +12,7 @@ from restfw_composed_permissions.generic.components import (
 
 class ReadOnlyCreateOrOwnPost(BaseComposedPermission):
     def global_permission_set(self):
-        print("gen perm called")
-        return Or(And(AllowOnlyAuthenticated), (AllowOnlySafeHttpMethod),)
+        return AllowOnlyAuthenticated
 
     def object_permission_set(self):
-        print("object perm called")
         return ObjectAttrEqualToObjectAttr("obj.user", "request.user")
