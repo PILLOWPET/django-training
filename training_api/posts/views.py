@@ -4,6 +4,7 @@ from rest_framework.permissions import (
     IsAuthenticated,
     AllowAny,
     SAFE_METHODS,
+    IsAuthenticatedOrReadOnly,
 )
 from .permissions import ReadOnlyCreateOrOwnPost
 from .serializers import PostSerializer
@@ -30,8 +31,10 @@ class PostAPIView(viewsets.ModelViewSet):
 
     def get_permissions(self):
         permission_classes = []
-        if self.request.method not in SAFE_METHODS:
+        if self.action in ["update", "partial_update", "destroy", "create"]:
             permission_classes = [ReadOnlyCreateOrOwnPost]
+        elif self.action == "comments" and self.request.method == "POST":
+            permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
     @action(methods=["get", "post"], detail=True, url_path="comments")
