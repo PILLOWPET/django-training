@@ -125,6 +125,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_jwt.authentication.JSONWebTokenAuthentication"
     ],
+    "EXCEPTION_HANDLER": "training_api.utils.custom_exception_handler",
 }
 
 JWT_AUTH = {
