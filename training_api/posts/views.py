@@ -3,6 +3,7 @@ from .models import Post
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
     IsAuthenticated,
+    AllowAny,
     SAFE_METHODS,
 )
 from .permissions import ReadOnlyCreateOrOwnPost
@@ -32,3 +33,23 @@ class PostAPIView(viewsets.ModelViewSet):
         if self.request.method not in SAFE_METHODS:
             permission_classes = [ReadOnlyCreateOrOwnPost]
         return [permission() for permission in permission_classes]
+
+
+class PostFollowedAPIView(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+
+    def get_permissions(self):
+        if self.action == "list":
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [~AllowAny]
+        return [permission() for permission in permission_classes]
+
+    def list(self, request):
+        queryset = Post.objects.all()
+        followed_profiles = request.user.profile.following_profiles.all()
+        filtered_qs = Post.objects.none()
+        for profile in followed_profiles:
+            filtered_qs = filtered_qs.union(queryset.filter(user=profile.user))
+        serializer = PostSerializer(filtered_qs, many=True)
+        return Response(serializer.data)
