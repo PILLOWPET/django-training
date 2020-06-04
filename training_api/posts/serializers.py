@@ -2,8 +2,6 @@ from rest_framework import serializers
 
 from .models import Post, Comment
 
-from users.serializers import UserSerializer
-
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
