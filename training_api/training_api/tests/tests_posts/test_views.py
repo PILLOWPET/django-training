@@ -1,10 +1,11 @@
-from django.test import TestCase
+from rest_framework.test import APITestCase, APIClient
+from rest_framework.authtoken.models import Token
 
 from django.contrib.auth.models import User
 from posts.models import Post, Comment
 
 
-class PostViewSetTest(TestCase):
+class PostViewSetTest(APITestCase):
     @classmethod
     def setUpTestData(cls):
         test_user_1 = User.objects.create_user(
@@ -39,3 +40,23 @@ class PostViewSetTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertGreater(len(resp.data), 0)
         self.assertTrue("content" in resp.data[0])
+
+    def test_create_unauthenticated(self):
+        client = APIClient()
+        response = client.post(
+            "/posts/", {"title": "test_title", "content": "test_content"}, format="json"
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_create_authenticated(self):
+        client = APIClient()
+        response = client.post(
+            "/token/", {"username": "test_user", "password": "test_password"}
+        )
+        token = response.data["token"]
+        client.credentials(HTTP_AUTHORIZATION="jwt " + token)
+        response = client.post(
+            "/posts/", {"title": "test_title", "content": "test_content"}, format="json"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response.data["date"])
