@@ -1,14 +1,12 @@
 from rest_framework import viewsets, status
 from .models import Post
 from rest_framework.permissions import (
-    IsAuthenticatedOrReadOnly,
     IsAuthenticated,
     AllowAny,
     SAFE_METHODS,
 )
 from .permissions import ReadOnlyCreateOrOwnPost
 from .serializers import PostSerializer
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 
 # Create your views here.
