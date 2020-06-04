@@ -10,6 +10,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=512)
     following_profiles = models.ManyToManyField("self", blank=True)
+    photo = models.FileField(blank=True, default="", upload_to="photos/")
 
 
 @receiver(post_save, sender=User)
