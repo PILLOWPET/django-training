@@ -10,18 +10,18 @@ class UserModelTest(TestCase):
     def test_username_label(self):
         user = User.objects.get(id=1)
         field_label = user._meta.get_field("username").verbose_name
-        self.assertEquals(field_label, "username")
+        self.assertEqual(field_label, "username")
 
     def test_email_label(self):
         user = User.objects.get(id=1)
         field_label = user._meta.get_field("email").verbose_name
-        self.assertEquals(field_label, "email address")
+        self.assertEqual(field_label, "email address")
 
     def test_password_label(self):
         user = User.objects.get(id=1)
         field_label = user._meta.get_field("password").verbose_name
-        self.assertEquals(field_label, "password")
+        self.assertEqual(field_label, "password")
 
     def test_object_name(self):
         user = User.objects.get(id=1)
-        self.assertEquals("test_user", str(user))
+        self.assertEqual("test_user", str(user))

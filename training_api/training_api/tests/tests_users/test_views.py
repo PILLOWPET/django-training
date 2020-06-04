@@ -17,7 +17,7 @@ class UserViewSetTest(TestCase):
         resp = self.client.post(
             url, {"username": "test_user", "password": "test_password"}
         )
-        self.assertTrue(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
         self.assertTrue("token" in resp.data)
 
     def test_create(self):
@@ -25,5 +25,5 @@ class UserViewSetTest(TestCase):
         resp = self.client.post(
             url, {"username": "test_user2", "password": "test_password2"}
         )
-        self.assertTrue(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 201)
         self.assertTrue("username" in resp.data)
