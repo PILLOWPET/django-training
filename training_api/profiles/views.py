@@ -1,10 +1,11 @@
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from .models import Profile
 from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS
 from .serializers import ProfileSerializer
 from .permissions import ownProfile, IsValidAction
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.exceptions import NotFound, ParseError
 
 # Create your views here.
 
@@ -37,11 +38,11 @@ class FollowAPIView(viewsets.ModelViewSet):
         try:
             profile_id = request.data["id"]
         except KeyError:
-            return Response("Id not specified", status=status.HTTP_400_BAD_REQUEST)
+            raise ParseError(detail="Profile id needs to be specified")
         try:
             profile_to_follow = Profile.objects.get(pk=profile_id)
         except ObjectDoesNotExist:
-            return Response("Invalid profile id", status=status.HTTP_400_BAD_REQUEST)
+            raise NotFound(detail="Profile not found")
         user_profile = request.user.profile
         user_profile.following_profiles.add(profile_to_follow)
         serializer = ProfileSerializer(user_profile, context={"request": request})
