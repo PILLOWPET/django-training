@@ -12,6 +12,9 @@ class Profile(models.Model):
     following_profiles = models.ManyToManyField("self", blank=True)
     photo = models.FileField(blank=True, default="", upload_to="photos/")
 
+    def __str__(self):
+        return self.user.username
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
