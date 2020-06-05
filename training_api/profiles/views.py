@@ -6,6 +6,7 @@ from .permissions import ownProfile, IsValidAction
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.exceptions import NotFound, ParseError
+from shared.permissions import IsAdmin
 
 # Create your views here.
 
@@ -18,7 +19,7 @@ class ProfileAPIView(viewsets.ModelViewSet):
         if self.request.method in SAFE_METHODS:
             permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [ownProfile & IsValidAction]
+            permission_classes = [ownProfile & IsValidAction | IsAdmin]
         return [permission() for permission in permission_classes]
 
 
