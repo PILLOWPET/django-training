@@ -25,59 +25,74 @@ class PostViewSetTest(APITestCase):
         )
         comment_1.save()
 
-    def test_retrieve(self):
-        url = "/posts/1/"
-        resp = self.client.get(url)
+    def init_client(self, user):
+        client = APIClient()
+        if user == 0:
+            return client
+        if user == 1:
+            response = client.post(
+                "/token/", {"username": "test_user", "password": "test_password"}
+            )
+        if user == 2:
+            response = client.post(
+                "/token/", {"username": "test_user_2", "password": "test_password_2"}
+            )
+        self.assertEqual(response.status_code, 200)
+        token = response.data["token"]
+        client.credentials(HTTP_AUTHORIZATION="jwt " + token)
+        return client
+
+    def test_retrieve_unauthenticated(self):
+        client = self.init_client(0)
+        resp = client.get("/posts/1/")
         self.assertEqual(resp.status_code, 200)
         self.assertTrue("title" in resp.data)
 
-    def test_list(self):
-        url = "/posts/"
-        resp = self.client.get(url)
+    def test_list_unauthenticated(self):
+        client = self.init_client(0)
+        resp = client.get("/posts/")
         self.assertEqual(resp.status_code, 200)
         self.assertGreater(len(resp.data), 0)
         self.assertTrue("title" in resp.data[0])
 
     def test_create_unauthenticated(self):
-        client = APIClient()
+        client = self.init_client(0)
         response = client.post(
             "/posts/", {"title": "test_title", "content": "test_content"}, format="json"
         )
         self.assertEqual(response.status_code, 401)
 
     def test_create_authenticated(self):
-        client = APIClient()
-        response = client.post(
-            "/token/", {"username": "test_user", "password": "test_password"}
-        )
-        self.assertEqual(response.status_code, 200)
-        token = response.data["token"]
-        client.credentials(HTTP_AUTHORIZATION="jwt " + token)
+        client = self.init_client(1)
         response = client.post(
             "/posts/", {"title": "test_title", "content": "test_content"}, format="json"
         )
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(response.data["date"])
 
-    def test_modify_other_user_post(self):
-        client = APIClient()
-        response = client.post(
-            "/token/", {"username": "test_user_2", "password": "test_password_2"}
+    def test_change_own_post(self):
+        client = self.init_client(1)
+        response = client.patch(
+            "/posts/1/", {"title": "different_title"}, format="json"
         )
         self.assertEqual(response.status_code, 200)
-        token = response.data["token"]
-        client.credentials(HTTP_AUTHORIZATION="jwt " + token)
+        self.assertEqual(response.data["title"], "different_title")
+
+    def test_change_other_user_post(self):
+        client = self.init_client(2)
         response = client.patch(
             "/posts/1/", {"title": "different_title"}, format="json"
         )
         self.assertEqual(response.status_code, 403)
 
+    def test_delete_own_post(self):
+        client = self.init_client(1)
+        response = client.delete("/posts/1/")
+        self.assertEqual(response.status_code, 204)
+        response_after_delete = client.get("/posts/1/")
+        self.assertEqual(response_after_delete.status_code, 404)
+
     def test_delete_other_user_post(self):
-        client = APIClient()
-        response = client.post(
-            "/token/", {"username": "test_user_2", "password": "test_password_2"}
-        )
-        token = response.data["token"]
-        client.credentials(HTTP_AUTHORIZATION="jwt " + token)
+        client = self.init_client(2)
         response = client.delete("/posts/1/", format="json")
         self.assertEqual(response.status_code, 403)
