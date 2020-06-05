@@ -20,6 +20,10 @@ class PostViewSetTest(APITestCase):
             title="test_title", content="test_content", user=test_user_1
         )
         post_1.save()
+        post_2 = Post.objects.create(
+            title="test_title_2", content="test_content_2", user=test_user_2
+        )
+        post_2.save()
         comment_1 = Comment.objects.create(
             content="test", user=test_user_1, post=post_1
         )
@@ -96,3 +100,11 @@ class PostViewSetTest(APITestCase):
         client = self.init_client(2)
         response = client.delete("/posts/1/", format="json")
         self.assertEqual(response.status_code, 403)
+
+    def test_followed_list(self):
+        client = self.init_client(2)
+        client.post("/profiles/follow/", {"id": 1}, format="json")
+        response = client.get("/posts/followed/", format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["title"], "test_title")
