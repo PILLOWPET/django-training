@@ -82,3 +82,11 @@ class ProfileViewSetTest(APITestCase):
         client = self.init_client(2)
         response = client.delete("/profiles/1/")
         self.assertEqual(response.status_code, 403)
+
+    def test_create_follow(self):
+        client = self.init_client(2)
+        response = client.post("/profiles/follow/", {"id": 1}, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("following_profiles" in response.data)
+        self.assertGreater(len(response.data["following_profiles"]), 0)
+        self.assertTrue(1 in response.data["following_profiles"])
