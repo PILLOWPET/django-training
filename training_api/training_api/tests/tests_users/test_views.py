@@ -77,6 +77,13 @@ class UserViewSetTest(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue("email" in response.data)
 
+    def test_change_other(self):
+        client = self.init_client(2)
+        response = client.patch(
+            "/users/1/", {"email": "new_email@email.com"}, format="json"
+        )
+        self.assertEqual(response.status_code, 403)
+
     def delete_own(self):
         client = self.init_client(1)
         response = client.delete("/users/1")
