@@ -75,7 +75,7 @@ class PostAPIView(viewsets.ModelViewSet):
             return Response(serializer.data)
         if request.method == "DELETE":
             comment.delete()
-            return Response()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         if request.method == "PATCH":
             serializer = CommentSerializer(comment, data=request.data, partial=True)
             if serializer.is_valid():
