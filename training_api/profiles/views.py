@@ -19,7 +19,7 @@ class ProfileAPIView(viewsets.ModelViewSet):
         if self.request.method in SAFE_METHODS:
             permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [ownProfile & IsValidAction | IsAdmin]
+            permission_classes = [ownProfile & IsValidAction | IsAdmin & IsValidAction]
         return [permission() for permission in permission_classes]
 
 

@@ -41,7 +41,7 @@ class ProfileViewSetTest(APITestCase):
         self.assertTrue("description" in response.data)
         self.assertEqual(response.data["description"], "new_description")
 
-    def delete_other(self):
+    def test_delete_other(self):
         client = self.init_client(2)
         response = client.delete("/profiles/1/")
         self.assertEqual(response.status_code, 403)
