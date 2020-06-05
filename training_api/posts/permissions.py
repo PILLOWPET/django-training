@@ -1,9 +1,4 @@
-from rest_framework.permissions import SAFE_METHODS, BasePermission
-from restfw_composed_permissions.base import (
-    BaseComposedPermission,
-    Or,
-    And,
-)
+from restfw_composed_permissions.base import BaseComposedPermission
 from restfw_composed_permissions.generic.components import (
     AllowOnlyAuthenticated,
     ObjectAttrEqualToObjectAttr,
