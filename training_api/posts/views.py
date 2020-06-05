@@ -3,8 +3,6 @@ from .models import Post, Comment
 from rest_framework.permissions import (
     IsAuthenticated,
     AllowAny,
-    SAFE_METHODS,
-    IsAuthenticatedOrReadOnly,
 )
 from .permissions import ReadOnlyCreateOrOwnPost
 from .serializers import PostSerializer
@@ -13,6 +11,7 @@ from rest_framework.decorators import action
 from posts.serializers import CommentSerializer
 from rest_framework.exceptions import NotFound
 from django.core.exceptions import ObjectDoesNotExist
+from shared.permissions import IsAdmin
 
 # Create your views here.
 
@@ -36,7 +35,7 @@ class PostAPIView(viewsets.ModelViewSet):
         if self.action in ["update", "partial_update", "destroy", "create"] or (
             self.action == "comment" and self.request.method in ["PATCH", "DELETE"]
         ):
-            permission_classes = [ReadOnlyCreateOrOwnPost]
+            permission_classes = [ReadOnlyCreateOrOwnPost | IsAdmin]
         elif self.action == "comments" and self.request.method == "POST":
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
