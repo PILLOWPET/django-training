@@ -86,6 +86,7 @@ class PostAPIView(viewsets.ModelViewSet):
 
 class PostFollowedAPIView(viewsets.ModelViewSet):
     queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
     def get_permissions(self):
         if self.action == "list":
