@@ -126,6 +126,7 @@ REST_FRAMEWORK = {
         "rest_framework_jwt.authentication.JSONWebTokenAuthentication"
     ],
     "EXCEPTION_HANDLER": "training_api.utils.custom_exception_handler",
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }
 
 JWT_AUTH = {
