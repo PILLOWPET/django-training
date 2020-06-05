@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from posts.models import Post, Comment
 
 
-class PostViewSetTest(APITestCase):
+class CommentViewSetTest(APITestCase):
     @classmethod
     def setUpTestData(cls):
         test_user_1 = User.objects.create_user(
