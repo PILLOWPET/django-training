@@ -63,7 +63,7 @@ class PostViewSetTest(APITestCase):
     def test_delete_comment_authenticated(self):
         client = self.init_client(1)
         response = client.delete("/posts/1/comments/1/")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
         response_after_delete = client.get("/posts/1/comments/1/")
         self.assertEqual(response_after_delete.status_code, 404)
 
