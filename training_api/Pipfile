@@ -9,7 +9,7 @@ black = "*"
 
 [packages]
 django = "==3.0.3"
-djangorestframework = "==3.11.0"
+djangorestframework = "==3.11.2"
 djangorestframework-jwt = "*"
 djangorestframework-composed-permissions = "*"
 
